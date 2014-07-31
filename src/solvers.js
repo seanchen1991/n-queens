@@ -14,37 +14,104 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
-
+  var solution = new Array(n);
+  var innerArray = new Array(n);
+  for (var i = 0, x = solution.length; i < x; i++) {
+    solution[i] = innerArray;
+  }
+  for (var i = 0, x = solution.length; i < x; i++) {
+    for (var j = 0, y = innerArray.length; j < y; j++) {
+      if (i === j) {
+        solution[i][j]++;
+      }
+    }
+  }
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
-
-
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var columnTracker = {}, solutionCount = 0;
+  var checkRows = function(row) {
+    for (var column = 0; column < n; column++) {
+      if (!columnTracker[column]) {
+        columnTracker[column] = true;
+        if (row + 1 < n) {
+          checkRows(row + 1);
+        } else {
+          solutionCount++;
+        }
+        columnTracker[column] = false;
+      }
+    }
+    return;
+  };
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  checkRows(0);
+  console.log('Number of solutions for ' + n + 'rooks:', solutionCount);
   return solutionCount;
 };
 
-
-
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  var row, solution = []; //fixme
+  for (var i = 0; i < n; i++) {
+    row = [];
+    for (var j = 0; j < n; j++) {
+      row.push(0);
+    }
+    solution.push(row);
+  }
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
 
-
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  // instantiate tracker objects for columns, major, and minor diagonals
+  var columnTracker = {}, majorTracker = {}, minorTracker = {}, solutionCount = (n === 0) ? 1 : 0; //fixme
+  // instantiate checkRows function
+  var checkRows = function(row) {
+    // for all columns with index less than n
+    for (var column = 0; column < n; column++) {
+      if (!columnTracker[column] && !majorTracker[column + row] && !minorTracker[column - row + n - 1]) {
+        columnTracker[column] = true;
+        majorTracker[column + row] = true;
+        minorTracker[column - row + n - 1] = true;
+        if (row + 1 < n) {
+          checkRows(row + 1);
+        } else {
+          solutionCount++;
+        }
+        columnTracker[column] = false
+        majorTracker[column + row] = false;
+        minorTracker[column - row + n - 1] = false;
+      }
+    }
+    return;
+  };
+
+  checkRows(0);
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
+};
+
+// n-queens solution utilizing heuristics
+window.findNQueensSolution = function(n) {
+  var solution = new Array(n);
+  var innerArray = new Array(n);
+  for (var i = 0, x = solution.length; i < x; i++) {
+    solution[i] = innerArray;
+  }
+  // this heuristic solution only works for n >= 4
+  if (n >= 4) {
+    // if n % 6 !== 2 or 3, then the solution space consists of 
+    // all even row indices followed all odd row indices <= n
+    if (n % 6 === 2 || n % 6 === 3) {
+
+    }
+  }
 };
