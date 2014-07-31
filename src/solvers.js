@@ -69,7 +69,7 @@ window.findNQueensSolution = function(n) {
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
-window.countNQueensSolutions = function(n) {
+/*window.countNQueensSolutions = function(n) {
   // instantiate tracker objects for columns, major, and minor diagonals
   var columnTracker = {}, majorTracker = {}, minorTracker = {}, solutionCount = (n === 0) ? 1 : 0; //fixme
   // instantiate checkRows function
@@ -97,21 +97,33 @@ window.countNQueensSolutions = function(n) {
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
-};
+};*/
 
-// n-queens solution utilizing heuristics
-window.findNQueensSolution = function(n) {
-  var solution = new Array(n);
-  var innerArray = new Array(n);
-  for (var i = 0, x = solution.length; i < x; i++) {
-    solution[i] = innerArray;
-  }
-  // this heuristic solution only works for n >= 4
-  if (n >= 4) {
-    // if n % 6 !== 2 or 3, then the solution space consists of 
-    // all even row indices followed all odd row indices <= n
-    if (n % 6 === 2 || n % 6 === 3) {
-
+// n-queens solution utilizing bitshifting
+window.countNQueensSolutions = function(n, current, left, right, down) {
+  // initialize solutionCount to 0
+  var solutionCount = (n === 0) ? 1 : 0;
+  // let current, left, right, and down be 0 if any are not given
+  current = current || 0;
+  left = left || 0;
+  right = right || 0;
+  down = down || 0;
+  // initialize a variable referencing possible threats
+  var threats = left | right | down;
+  // iterate over ??
+  for (var i = 1, x = 2 << (n - 1); i < x; i*=2) {
+    // if threats AND i are falsy, and if we reach a board of size n
+      // increment solutionCount since we've checked all rows for possible threats and none came up
+      // otherwise, increment solutionCount with a recursive call to 
+      // countNQueensBitShift, passing in updated values
+    // return solutionCount 
+    if (!(threats & i)) {
+      if (current + 1 === n) {
+        solutionCount++;
+      } else {
+        solutionCount += countNQueensSolutions(n, current + 1, (left + i) << 1, (right + i) >> 1, down + i);
+      }
     }
   }
+  return solutionCount;
 };
